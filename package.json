@@ -1,0 +1,37 @@
+{
+  "name": "projecttrack-backend",
+  "version": "1.0.0",
+  "description": "Backend API for ProjectTrack, a project management tool. Built with Node.js and Express, it handles project and task management, user authentication, and integrates with services like GitHub. Supports real-time updates and scalable data handling.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "create": "node createFiles.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FierceSpectrum/ProjectTrack-backend.git"
+  },
+  "author": "Benjamín & Roney",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FierceSpectrum/ProjectTrack-backend/issues"
+  },
+  "homepage": "https://github.com/FierceSpectrum/ProjectTrack-backend#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "node-cron": "^3.0.3",
+    "pg": "^8.12.0",
+    "pg-hstore": "^2.3.4",
+    "qrcode": "^1.5.4",
+    "sequelize": "^6.37.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
