@@ -2,18 +2,22 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database");
 
 const Permission = sequelize.define(
-  "Permission",
+  "permission",
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    baseField: {
-      type: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
-    statePermission: {
+    description: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    state_permission: {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: "Create",

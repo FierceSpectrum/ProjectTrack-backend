@@ -1,24 +1,41 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database");
 
-const Member = sequelize.define(
-  "Member",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
+const Member = sequelize.define("member", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  organization_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "organization",
+      key: "id",
     },
-    baseField: {
-      type: DataTypes.STRING,
-      allowNull: false,
+  },
+  user_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "user",
+      key: "id",
     },
-    stateMember: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "Create",
+  },
+  role_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "role",
+      key: "id",
     },
-  }
-);
+  },
+  state_member: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: "Create",
+  },
+});
 
 module.exports = Member;

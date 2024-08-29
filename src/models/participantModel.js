@@ -1,24 +1,41 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database");
 
-const Participant = sequelize.define(
-  "Participant",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
+const Participant = sequelize.define("participant", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  project_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "project",
+      key: "id",
     },
-    baseField: {
-      type: DataTypes.STRING,
-      allowNull: false,
+  },
+  member_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "member",
+      key: "id",
     },
-    stateParticipant: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "Create",
+  },
+  assignments_id: {
+    type: DataTypes.ARRAY,
+    allowNull: false,
+    references: {
+      model: "assignment",
+      key: "id",
     },
-  }
-);
+  },
+  state_participant: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: "Create",
+  },
+});
 
 module.exports = Participant;
