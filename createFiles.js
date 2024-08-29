@@ -11,6 +11,15 @@ const toPascalCase = (str) => {
     .join("");
 };
 
+const formattedFolder = (folder) => {
+  return (
+    folder.charAt(0).toUpperCase() +
+    folder
+      .slice(1, folder !== "routes" ? folder.length - 1 : folder.length)
+      .toLowerCase()
+  );
+};
+
 // Extrae flags y nombres de componentes de los argumentos
 function extraerFlagsAndComponentsName(args) {
   const flags = [];
@@ -39,13 +48,10 @@ function extraerFlagsAndComponentsName(args) {
 
 // Verifica si un componente ya existe
 function componenteYaExiste(componentName, folder) {
-  const formattedFolder =
-    folder.charAt(0).toUpperCase() +
-    folder.slice(1, folder.length - 1).toLowerCase();
   const componentDir = path.join(
     srcPath,
     folder,
-    `${componentName}${formattedFolder}.js`
+    `${componentName}${formattedFolder(folder)}.js`
   );
   return fs.existsSync(componentDir);
 }
@@ -107,25 +113,26 @@ function contentModel(name) {
   return `const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database");
 
-const ${formatName(name)} = sequelize.define(
-  "${formatName(name)}",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    baseField: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    state${formatName(name)}: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "Create",
-    },
-  }
-);
+const ${formatName(name)} = sequelize.define("${name}", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  name: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  state_${name}: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: "Create",
+  },
+});
 
 module.exports = ${formatName(name)};`;
 }
@@ -179,14 +186,10 @@ folders.forEach((folder) => {
 
 // Función para crear archivos
 const createFile = (folder, fileName, content) => {
-  const formattedFolder =
-    folder.charAt(0).toUpperCase() +
-    folder.slice(1, folder.length - 1).toLowerCase();
-
   const filePath = path.join(
     srcPath,
     folder,
-    `${fileName}${formattedFolder}.js`
+    `${fileName}${formattedFolder(folder)}.js`
   );
 
   if (fs.existsSync(filePath) && flags.includes("RES")) {
@@ -214,11 +217,8 @@ const existingComponents = folderflags.reduce((acc, folder) => {
   const names = componentNames.filter((componentName) =>
     componenteYaExiste(componentName, folder)
   );
-  const formattedFolder =
-    folder.charAt(0).toUpperCase() +
-    folder.slice(1, folder.length - 1).toLowerCase();
   const componentPaths = names.map((name) =>
-    path.join(folder, `${name}${formattedFolder}.js`)
+    path.join(folder, `${name}${formattedFolder(folder)}.js`)
   );
   return acc.concat(componentPaths);
 }, []);
