@@ -1,12 +1,13 @@
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+import {
   postPermission,
   getPermissions,
   getPermissionByID,
   patchPermission,
   deletePermission,
-} = require("../controllers/permissionController");
+} from "../controllers/permissionController.js";
+
+const router = express.Router();
 
 // Rutas
 router.post("/post", postPermission);
@@ -16,4 +17,4 @@ router.patch("/:id", patchPermission);
 router.put("/:id", patchPermission);
 router.delete("/:id", deletePermission);
 
-module.exports = router;
+export default router;

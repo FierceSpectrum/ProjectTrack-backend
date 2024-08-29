@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../config/database");
+import { DataTypes } from "sequelize";
+import { sequelize } from "../config/database.js";
 
 const Member = sequelize.define("member", {
   id: {
@@ -38,4 +38,4 @@ const Member = sequelize.define("member", {
   },
 });
 
-module.exports = Member;
+export default Member;

@@ -1,7 +1,11 @@
-const { Pool } = require("pg");
+import { Pool } from "pg";
+import { Sequelize } from "sequelize";
+import dotenv from "dotenv";
 
-require("dotenv").config();
+// Cargar variables de entorno desde un archivo .env
+dotenv.config();
 
+// Configuración para el pool de conexiones con pg
 const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
@@ -9,9 +13,6 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
 });
-
-const { Sequelize } = require("sequelize");
-require("dotenv").config();
 
 // Configuración de Sequelize para PostgreSQL
 const sequelize = new Sequelize(
@@ -26,4 +27,4 @@ const sequelize = new Sequelize(
   }
 );
 
-module.exports = { pool, sequelize };
+export { pool, sequelize };

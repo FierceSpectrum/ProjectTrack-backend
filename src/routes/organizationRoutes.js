@@ -1,12 +1,13 @@
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+import {
   postOrganization,
   getOrganizations,
   getOrganizationByID,
   patchOrganization,
   deleteOrganization,
-} = require("../controllers/organizationController");
+} from "../controllers/organizationController.js";
+
+const router = express.Router();
 
 // Rutas
 router.post("/post", postOrganization);
@@ -16,4 +17,4 @@ router.patch("/:id", patchOrganization);
 router.put("/:id", patchOrganization);
 router.delete("/:id", deleteOrganization);
 
-module.exports = router;
+export default router;

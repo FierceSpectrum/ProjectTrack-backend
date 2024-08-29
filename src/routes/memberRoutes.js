@@ -1,12 +1,13 @@
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+import {
   postMember,
   getMembers,
   getMemberByID,
   patchMember,
   deleteMember,
-} = require("../controllers/memberController");
+} from "../controllers/memberController.js";
+
+const router = express.Router();
 
 // Rutas
 router.post("/post", postMember);
@@ -16,4 +17,4 @@ router.patch("/:id", patchMember);
 router.put("/:id", patchMember);
 router.delete("/:id", deleteMember);
 
-module.exports = router;
+export default router;

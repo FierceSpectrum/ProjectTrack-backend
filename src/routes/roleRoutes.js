@@ -1,12 +1,13 @@
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+import {
   postRole,
   getRoles,
   getRoleByID,
   patchRole,
   deleteRole,
-} = require("../controllers/roleController");
+} from "../controllers/roleController.js";
+
+const router = express.Router();
 
 // Rutas
 router.post("/post", postRole);
@@ -16,4 +17,4 @@ router.patch("/:id", patchRole);
 router.put("/:id", patchRole);
 router.delete("/:id", deleteRole);
 
-module.exports = router;
+export default router;

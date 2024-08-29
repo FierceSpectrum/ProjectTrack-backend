@@ -1,12 +1,13 @@
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+import {
   postAssignment,
   getAssignments,
   getAssignmentByID,
   patchAssignment,
   deleteAssignment,
-} = require("../controllers/assignmentController");
+} from "../controllers/assignmentController.js";
+
+const router = express.Router();
 
 // Rutas
 router.post("/post", postAssignment);
@@ -16,4 +17,4 @@ router.patch("/:id", patchAssignment);
 router.put("/:id", patchAssignment);
 router.delete("/:id", deleteAssignment);
 
-module.exports = router;
+export default router;

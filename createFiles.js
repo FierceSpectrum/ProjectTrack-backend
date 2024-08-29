@@ -1,24 +1,26 @@
-const fs = require("fs");
-const path = require("path");
-const execSync = require("child_process").execSync;
+import fs from "fs";
+import path from "path";
+import { execSync } from "child_process";
+import { fileURLToPath } from "url";
 
-const PALABRAS_CLAVES = ["all", "res", "m", "r", "c"];
+const KEYWORDS = ["all", "res", "m", "r", "c"];
+const SRC_PATH = path.join(path.dirname(fileURLToPath(import.meta.url)), "src");
+const FOLDERS = ["controllers", "models", "routes"];
 
-const toPascalCase = (str) => {
+// Formatear las cadenas
+const formattedStr = (str) => {
   return str
     .split(/[\s-]+/)
     .map((word) => word.toLowerCase())
     .join("");
 };
 
-const formattedFolder = (folder) => {
-  return (
-    folder.charAt(0).toUpperCase() +
-    folder
-      .slice(1, folder !== "routes" ? folder.length - 1 : folder.length)
-      .toLowerCase()
-  );
-};
+// Formatear nombres de carpetas
+const formattedFolder = (folder) =>
+  folder.charAt(0).toUpperCase() +
+  folder
+    .slice(1, folder !== "routes" ? folder.length - 1 : folder.length)
+    .toLowerCase();
 
 // Extrae flags y nombres de componentes de los argumentos
 function extraerFlagsAndComponentsName(args) {
@@ -27,7 +29,7 @@ function extraerFlagsAndComponentsName(args) {
   args.forEach((arg) => {
     if (arg.startsWith("-")) {
       let flag = arg.slice(1);
-      if (PALABRAS_CLAVES.includes(flag)) {
+      if (KEYWORDS.includes(flag)) {
         flags.push(flag.toUpperCase());
       } else {
         flags.push(
@@ -35,21 +37,21 @@ function extraerFlagsAndComponentsName(args) {
             .split("")
             .map((flag) => flag.toUpperCase())
             .filter((flag) =>
-              PALABRAS_CLAVES.map((flag) => flag.toUpperCase()).includes(flag)
+              KEYWORDS.map((flag) => flag.toUpperCase()).includes(flag)
             )
         );
       }
     } else {
-      componentNames.push(toPascalCase(arg));
+      componentNames.push(formattedStr(arg));
     }
   });
   return { flags, componentNames };
 }
 
 // Verifica si un componente ya existe
-function componenteYaExiste(componentName, folder) {
+function componentExists(componentName, folder) {
   const componentDir = path.join(
-    srcPath,
+    SRC_PATH,
     folder,
     `${componentName}${formattedFolder(folder)}.js`
   );
@@ -60,60 +62,87 @@ const formatName = (name) => {
   return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 };
 
-function contentController(name) {
-  return `const ${formatName(name)} = require("../models/${name}Model");
+// Crea contenido para controladores
+function createControllerContent(name) {
+  const capitalized = formatName(name);
+  return `import ${capitalized} from "../models/${name}Model.js";
 
 // Funciones básicas: create, update, post, delete
-const post${formatName(name)} = async (req, res) => {
+const post${capitalized} = async (req, res) => {
   try {
-    res.status(201).json({ message: "${formatName(name)} create" });
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-const get${formatName(name)} = async (req, res) => {
-  try {
-    res.status(200).json({ message: "${formatName(name)}s gets" });
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-const get${formatName(name)}ByID = async (req, res) => {
-  try {
-    res.status(200).json({ message: "${formatName(name)} get" });
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-const patch${formatName(name)} = async (req, res) => {
-  try {
-    res.status(200).json({ message: "${formatName(name)} update" });
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-const delete${formatName(name)} = async (req, res) => {
-  try {
-    res.status(204).json({ message: "${name} delete" });
+    const nueva${capitalized} = await ${capitalized}.create(req.body);
+    res.status(201).json(nueva${capitalized});
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
-module.exports = {
-  post${formatName(name)},
-  get${formatName(name)},
-  get${formatName(name)}ByID,
-  patch${formatName(name)},
-  delete${formatName(name)},
+const get${capitalized} = async (req, res) => {
+  try {
+    const ${name}s = await ${capitalized}.findAll();
+    res.status(200).json(${name}s);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const get${capitalized}ByID = async (req, res) => {
+  try {
+    const ${name} = await ${capitalized}.findByPk(req.params.id);
+    if (${name}) {
+      res.status(200).json(${name});
+    } else {
+      res.status(404).json({ message: "${capitalized} not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const patch${capitalized} = async (req, res) => {
+  try {
+    const ${name} = await ${capitalized}.findByPk(req.params.id);
+    if (${name}) {
+      const updated${capitalized} = await ${name}.update(req.body);
+      res.status(200).json(updated${capitalized});
+    } else {
+      res.status(404).json({ message: "${capitalized} not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const delete${capitalized} = async (req, res) => {
+  try {
+    const ${name} = await ${capitalized}.findByPk(req.params.id);
+    if (${name}) {
+      await ${name}.destroy();
+      res.status(204).json({ message: "${capitalized} deleted" });
+    } else {
+      res.status(404).json({ message: "${capitalized} not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export default {
+  post${capitalized},
+  get${capitalized},
+  get${capitalized}ByID,
+  patch${capitalized},
+  delete${capitalized},
 };`;
 }
 
-function contentModel(name) {
-  return `const { DataTypes } = require("sequelize");
-const { sequelize } = require("../config/database");
+// Crea contenido para modelos
+function createModelContent(name) {
+  const capitalized = formatName(name);
+  return `import { DataTypes } from "sequelize";
+import { sequelize } from "../config/database.js";
 
-const ${formatName(name)} = sequelize.define("${name}", {
+const ${capitalized} = sequelize.define("${name}", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -134,60 +163,38 @@ const ${formatName(name)} = sequelize.define("${name}", {
   },
 });
 
-module.exports = ${formatName(name)};`;
+export default ${capitalized};`;
 }
 
-function contentRouter(name) {
-  return `const express = require("express");
+// Crea contenido para rutas
+function createRouterContent(name) {
+  const capitalized = formatName(name);
+  return `import express from "express";
+import {
+  post${capitalized},
+  get${capitalized}s,
+  get${capitalized}ByID,
+  patch${capitalized},
+  delete${capitalized},
+} from "../controllers/${name}Controller.js";
+
 const router = express.Router();
-const {
-  post${formatName(name)},
-  get${formatName(name)}s,
-  get${formatName(name)}ByID,
-  patch${formatName(name)},
-  delete${formatName(name)},
-} = require("../controllers/${name}Controller");
 
 // Rutas
-router.post("/post", post${formatName(name)});
-router.get("", get${formatName(name)}s);
-router.get("/:id", get${formatName(name)}ByID);
-router.patch("/:id", patch${formatName(name)});
-router.put("/:id", patch${formatName(name)});
-router.delete("/:id", delete${formatName(name)});
+router.post("/post", post${capitalized});
+router.get("", get${capitalized}s);
+router.get("/:id", get${capitalized}ByID);
+router.patch("/:id", patch${capitalized});
+router.put("/:id", patch${capitalized});
+router.delete("/:id", delete${capitalized});
 
-module.exports = router;`;
+export default router;`;
 }
 
-// Obtener los argumentos de la línea de comandos
-const args = process.argv.slice(2);
-
-const { flags, componentNames } = extraerFlagsAndComponentsName(args);
-
-// console.log(flags);
-// process.exit(1);
-
-const srcPath = path.join(__dirname, "src");
-
-const folders = ["controllers", "models", "routes"];
-
-// Verificar y crear la carpeta 'src'
-if (!fs.existsSync(srcPath)) {
-  fs.mkdirSync(srcPath);
-}
-
-// Crear las carpetas necesarias dentro de 'src'
-folders.forEach((folder) => {
-  const folderPath = path.join(srcPath, folder);
-  if (!fs.existsSync(folderPath)) {
-    fs.mkdirSync(folderPath);
-  }
-});
-
-// Función para crear archivos
+// Crea un archivo si no existe o se usa la bandera -res
 const createFile = (folder, fileName, content) => {
   const filePath = path.join(
-    srcPath,
+    SRC_PATH,
     folder,
     `${fileName}${formattedFolder(folder)}.js`
   );
@@ -207,24 +214,39 @@ const createFile = (folder, fileName, content) => {
   }
 };
 
-// Filtra las carpetas según las flags
-const folderflags = flags.includes("ALL")
-  ? folders
-  : folders.filter((folder) => flags.includes(folder.charAt(0).toUpperCase()));
+// Main
+const args = process.argv.slice(2);
+const { flags, componentNames } = extraerFlagsAndComponentsName(args);
+
+// Verificar y crear la carpeta 'src' si no existe
+if (!fs.existsSync(SRC_PATH)) {
+  fs.mkdirSync(SRC_PATH);
+}
+
+// Crear las carpetas necesarias dentro de 'src'
+FOLDERS.forEach((folder) => {
+  const folderPath = path.join(SRC_PATH, folder);
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath);
+  }
+});
+
+// Filtrar carpetas según las flags
+const selectedFolders = flags.includes("ALL")
+  ? FOLDERS
+  : FOLDERS.filter((folder) => flags.includes(folder.charAt(0).toUpperCase()));
 
 // Verificar si alguno de los componentes ya existe
-const existingComponents = folderflags.reduce((acc, folder) => {
-  const names = componentNames.filter((componentName) =>
-    componenteYaExiste(componentName, folder)
+const existingComponents = selectedFolders.reduce((acc, folder) => {
+  const existing = componentNames.filter((componentName) =>
+    componentExists(componentName, folder)
   );
-  const componentPaths = names.map((name) =>
-    path.join(folder, `${name}${formattedFolder(folder)}.js`)
+  return acc.concat(
+    existing.map((name) =>
+      path.join(folder, `${name}${formattedFolder(folder)}.js`)
+    )
   );
-  return acc.concat(componentPaths);
 }, []);
-
-// console.log(existingComponents);
-// process.exit(1);
 
 if (existingComponents.length > 0 && !flags.includes("RES")) {
   console.error(
@@ -232,31 +254,21 @@ if (existingComponents.length > 0 && !flags.includes("RES")) {
       ", "
     )}. Usa el flag '-res' para sobrescribir. No se creará ninguno de los componentes.`
   );
-  process.exit(1); // Terminar si alguno ya existe y no tiene '-res'
+  process.exit(1);
 }
 
 // Crear archivos para cada componente
 componentNames.forEach((name) => {
-  flags.forEach((flag) => {
-    switch (flag.toUpperCase()) {
-      case "M":
-        createFile("models", name, contentModel(name));
+  selectedFolders.forEach((folder) => {
+    switch (folder) {
+      case "models":
+        createFile("models", name, createModelContent(name));
         break;
-      case "R":
-        createFile("routes", name, contentRouter(name));
+      case "routes":
+        createFile("routes", name, createRouterContent(name));
         break;
-      case "C":
-        createFile("controllers", name, contentController(name));
-        break;
-      case "ALL":
-        createFile("models", name, contentModel(name));
-        createFile("routes", name, contentRouter(name));
-        createFile("controllers", name, contentController(name));
-        break;
-      case "RES":
-        break;
-      default:
-        console.log(`Flag no reconocida: ${flag}`);
+      case "controllers":
+        createFile("controllers", name, createControllerContent(name));
         break;
     }
   });
