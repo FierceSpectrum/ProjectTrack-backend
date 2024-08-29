@@ -1,10 +1,11 @@
-require("dotenv").config();
-const express = require("express");
-const { sequelize } = require("./config/database");
-const cors = require("cors");
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+import { sequelize } from "./src/config/database.js";
+
+dotenv.config();
 
 // Impotacion de Routes
-
 
 // Impotacion de Middlewares
 
@@ -18,9 +19,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-
 // app.use("Ruta", fuction);
-
 
 // Sincroniza los modelos con la base de datos
 sequelize
