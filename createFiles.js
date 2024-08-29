@@ -234,8 +234,8 @@ if (existingComponents.length > 0 && !flags.includes("RES")) {
   );
   process.exit(1); // Terminar si alguno ya existe y no tiene '-res'
 }
-// process.exit(1);
 
+// Crear archivos para cada componente
 componentNames.forEach((name) => {
   flags.forEach((flag) => {
     switch (flag.toUpperCase()) {
