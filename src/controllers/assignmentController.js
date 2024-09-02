@@ -1,13 +1,8 @@
 import Assignment from "../models/assignmentModel.js";
 import Permission from '../models/permissionModel.js';
+import { isValidString } from '../services/validateString.js';
 
 // TODO: Probar con la base de datos que todo funcione exitosamente
-
-// Validates that the entered string is correct
-const isValidString = (str) => {
-  return str !== undefined && str !== null && str.trim() !== '';
-}
-
 const postAssignment = async (req, res) => {
   try {
     const { permission_id, name, description } = req.body;
@@ -34,7 +29,7 @@ const postAssignment = async (req, res) => {
       .json(newAssignment);
 
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong...' });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
@@ -47,16 +42,16 @@ const getAssignment = async (req, res) => {
         as: 'permission'
       }]
     });
-    res.status(200).json(assignments);
+    return res.status(200).json(assignments);
   } catch (error) {
-    res.status(500).json({ error: "Something went wrong..." });
+    return res.status(500).json({ error: "Something went wrong..." });
   }
 };
 
 const getAssignmentByID = async (req, res) => {
   try {
-    const { id } = req?.params
-    
+    const { id } = req.params;
+
     // TODO: Probar si con el `include` obtengo los detalles del otro modelo
     const assignment = await Assignment.findByPk(id, {
       include: [{
@@ -65,18 +60,18 @@ const getAssignmentByID = async (req, res) => {
       }]
     });
     if (assignment) {
-      res.status(200).json(assignment);
+      return res.status(200).json(assignment);
     } else {
-      res.status(404).json({ message: "Assignment not found..." });
+      return res.status(404).json({ message: "Assignment not found..." });
     }
   } catch (error) {
-    res.status(500).json({ error: "Something went wrong..." });
+    return res.status(500).json({ error: "Something went wrong..." });
   }
 };
 
 const patchAssignment = async (req, res) => {
   try {
-    const { id } = req?.params
+    const { id } = req.params;
     const assignment = await Assignment.findByPk(id);
     if (assignment) {
       const { permission_id, name, description } = req.body;
@@ -94,28 +89,28 @@ const patchAssignment = async (req, res) => {
         name: isValidString(name) ? name : assignment.name,
         description: isValidString(description) ? description : assignment.description,
       });
-      res.status(200).json(updatedAssignment);
+      return res.status(200).json(updatedAssignment);
     } else {
-      res.status(404).json({ message: "Assignment not found..." });
+      return res.status(404).json({ message: "Assignment not found..." });
     }
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong...' });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
 // TODO: Averiguar si tiene restricciones de eliminación
 const deleteAssignment = async (req, res) => {
   try {
-    const { id } = req?.params
+    const { id } = req.params;
     const assignment = await Assignment.findByPk(id);
     if (assignment) {
       await assignment.destroy();
-      res.status(204).json({ message: "Assignment deleted successfully" });
+      return res.status(204).json({ message: "Assignment deleted successfully" });
     } else {
-      res.status(404).json({ message: "Assignment not found" });
+      return res.status(404).json({ message: "Assignment not found..." });
     }
   } catch (error) {
-    res.status(500).json({ error: "Something went wrong..." });
+    return res.status(500).json({ error: "Something went wrong..." });
   }
 };
 
