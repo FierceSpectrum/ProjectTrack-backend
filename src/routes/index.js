@@ -2,7 +2,6 @@ import express from "express";
 
 // Importación de Routes
 import assignmentRoutes from "./assignmentRoutes.js";
-import index from "./index.js";
 import memberRoutes from "./memberRoutes.js";
 import organizationRoutes from "./organizationRoutes.js";
 import participantRoutes from "./participantRoutes.js";
@@ -19,7 +18,6 @@ const router = express.Router();
 
 // Use Routes
 router.use("/assignments", assignmentRoutes);
-router.use("/index.jss", index);
 router.use("/members", memberRoutes);
 router.use("/organizations", organizationRoutes);
 router.use("/participants", participantRoutes);

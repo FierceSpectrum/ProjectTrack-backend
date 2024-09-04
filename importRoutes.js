@@ -17,7 +17,9 @@ function readFilesFromDirectory(directory, extension = ".js") {
       if (err) {
         return reject(`Error leyendo la carpeta: ${err.message}`);
       }
-      const filteredFiles = files.filter((file) => file.endsWith(extension));
+      const filteredFiles = files.filter(
+        (file) => file.endsWith(extension) && file !== "index.js"
+      );
       resolve(filteredFiles);
     });
   });
