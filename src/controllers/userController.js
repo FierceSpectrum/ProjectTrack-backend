@@ -1,62 +1,96 @@
 import User from "../models/userModel.js";
+import { isValidString } from "../utils/validateString.js";
 
-// Funciones básicas: create, update, post, delete
+const isValidEmail = async (email) => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
 const postUser = async (req, res) => {
   try {
-    const nuevaUser = await User.create(req.body);
-    res.status(201).json(nuevaUser);
+    const { name, last_Name, email, password, user_Name } = req.body;
+
+    if ((!isValidString(name)) || (!isValidString(last_Name)) || (!isValidEmail(email)) ||
+      (!password.length > 8) || (!isValidString(user_Name))) {
+      return res.status(400).json({ error: 'Invalid Data...' });
+    }
+
+    const newUser = await User.create({
+      name,
+      last_Name,
+      email,
+      password,
+      user_Name
+    });
+    return res
+      .status(201)
+      .header({ location: `/api/users/post?id=${newUser.id}` })
+      .json(newUser);
+
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
+// TODO: Check if filter is required
 const getUser = async (req, res) => {
   try {
     const users = await User.findAll();
-    res.status(200).json(users);
+    return res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
 const getUserByID = async (req, res) => {
   try {
-    const user = await User.findByPk(req.params.id);
+    const { id } = req.params;
+    const user = await User.findByPk(id);
     if (user) {
-      res.status(200).json(user);
+      return res.status(200).json(user);
     } else {
-      res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found..." });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
 const patchUser = async (req, res) => {
   try {
-    const user = await User.findByPk(req.params.id);
-    if (user) {
-      const updatedUser = await user.update(req.body);
-      res.status(200).json(updatedUser);
-    } else {
-      res.status(404).json({ message: "User not found" });
+    const { id } = req.params;
+    const { name, last_Name, email, password, user_Name } = req.body;
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found..." });
     }
+
+    const updatedUser = await user.update({
+      name: isValidString(name) ? name : user.name,
+      last_Name: isValidString(last_Name) ? last_Name : user.last_Name,
+      email: isValidEmail(email) ? email : user.email,
+      password: (password?.length > 8) ? password : user.password,
+      user_Name: isValidString(user_Name) ? user_Name : user.user_Name,
+    });
+    return res.status(200).json(updatedUser);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
+// TODO: Check if validation is required
 const deleteUser = async (req, res) => {
   try {
-    const user = await User.findByPk(req.params.id);
+    const { id } = req.params;
+    const user = await User.findByPk(id);
     if (user) {
       await user.destroy();
-      res.status(204).json({ message: "User deleted" });
+      res.status(204).json({ message: "User deleted successfully" });
     } else {
-      res.status(404).json({ message: "User not found" });
+      res.status(404).json({ error: "User not found..." });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 

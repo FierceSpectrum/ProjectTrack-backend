@@ -1,62 +1,87 @@
 import Permission from "../models/permissionModel.js";
 
-// Funciones básicas: create, update, post, delete
+import { isValidString } from '../utils/validateString.js';
+
 const postPermission = async (req, res) => {
   try {
-    const nuevaPermission = await Permission.create(req.body);
-    res.status(201).json(nuevaPermission);
+    const { name, description } = req.body;
+
+    if (!isValidString(name) || !isValidString(description)) {
+      return res.status(400).json({ error: 'Invalid Data...' });
+    }
+
+    const newPermission = await Permission.create({
+      name,
+      description,
+    });
+    return res
+      .status(201)
+      .header({ location: `/api/permissions/post?id=${newPermission.id}` })
+      .json(newPermission);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
 const getPermission = async (req, res) => {
   try {
     const permissions = await Permission.findAll();
-    res.status(200).json(permissions);
+    return res.status(200).json(permissions);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
 const getPermissionByID = async (req, res) => {
   try {
-    const permission = await Permission.findByPk(req.params.id);
+    const { id } = req.params;
+
+    const permission = await Permission.findByPk(id);
     if (permission) {
-      res.status(200).json(permission);
+      return res.status(200).json(permission);
     } else {
-      res.status(404).json({ message: "Permission not found" });
+      return res.status(404).json({ error: "Permission not found..." });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
 const patchPermission = async (req, res) => {
   try {
+    const { id } = req.params;
+
     const permission = await Permission.findByPk(req.params.id);
     if (permission) {
-      const updatedPermission = await permission.update(req.body);
-      res.status(200).json(updatedPermission);
+      const { name, description } = req.body;
+      const updatedPermission = await permission.update({
+        name: isValidString(name) ? name : permission.name,
+        description: isValidString(description) ? description : permission.description,
+      });
+
+      return res.status(200).json(updatedPermission);
     } else {
-      res.status(404).json({ message: "Permission not found" });
+      return res.status(404).json({ error: "Permission not found..." });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
+// TODO: Check if validation is required
 const deletePermission = async (req, res) => {
   try {
-    const permission = await Permission.findByPk(req.params.id);
+    const { id } = req.params;
+
+    const permission = await Permission.findByPk(id);
     if (permission) {
       await permission.destroy();
-      res.status(204).json({ message: "Permission deleted" });
+      return res.status(204).json({ message: "Permission deleted" });
     } else {
-      res.status(404).json({ message: "Permission not found" });
+      return res.status(404).json({ error: "Permission not found" });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 

@@ -1,6 +1,6 @@
 import State from "../models/stateModel.js";
 
-import { isValidString } from '../services/validateString.js';
+import { isValidString } from '../utils/validateString.js';
 
 const postState = async (req, res) => {
   try {
@@ -14,8 +14,7 @@ const postState = async (req, res) => {
     });
     return res
       .status(201)
-      // TODO: Modificar la ruta por la real una vez se creen los routes
-      .header({ location: `/api/postid=${newAssignment.id}` })
+      .header({ location: `/api/states/post?id=${newState.id}` })
       .json(newState);
 
   } catch (error) {
@@ -41,7 +40,7 @@ const getStateByID = async (req, res) => {
     if (state) {
       return res.status(200).json(state);
     } else {
-      return res.status(404).json({ message: "State not found..." });
+      return res.status(404).json({ error: "State not found..." });
     }
   } catch (error) {
     return res.status(500).json({ error: 'Something went wrong...' });
@@ -64,13 +63,14 @@ const patchState = async (req, res) => {
 
       return res.status(200).json(updatedState);
     } else {
-      return res.status(404).json({ message: "State not found..." });
+      return res.status(404).json({ error: "State not found..." });
     }
   } catch (error) {
     return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
+// TODO: Check if validation is required
 const deleteState = async (req, res) => {
   try {
     const { id } = req.params;
@@ -80,7 +80,7 @@ const deleteState = async (req, res) => {
       await state.destroy();
       return res.status(204).json({ message: "State deleted successfully" });
     } else {
-      return res.status(404).json({ message: "State not found..." });
+      return res.status(404).json({ error: "State not found..." });
     }
   } catch (error) {
     return res.status(500).json({ error: 'Something went wrong...' });

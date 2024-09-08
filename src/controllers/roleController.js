@@ -1,62 +1,118 @@
 import Role from "../models/roleModel.js";
+import Permission from "../models/permissionModel.js";
+import { isValidString } from '../utils/validateString.js';
 
-// Funciones básicas: create, update, post, delete
 const postRole = async (req, res) => {
   try {
-    const nuevaRole = await Role.create(req.body);
-    res.status(201).json(nuevaRole);
+    const { permissions, name, description } = req.body;
+
+    permissions.map(async (permission_id) => {
+      await validateRecord(Permission, permission_id, 'Permission');
+    });
+
+    if (!isValidString(name) || !isValidString(description)) {
+      return res.status(400).json({ error: 'Invalid Data...' });
+    }
+
+    const newRole = await Role.create({
+      permissions,
+      name,
+      description
+    });
+    return res
+      .status(201)
+      .header({ location: `/api/roles/post?id=${newRole.id}` })
+      .json(newRole);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    if (error.message.includes('not found')) {
+      return res.status(404).json({ error: error.message });
+    }
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
 const getRole = async (req, res) => {
   try {
-    const roles = await Role.findAll();
-    res.status(200).json(roles);
+    const roles = await Role.findAll({
+      include: [{
+        model: Permission,
+        as: 'permission'
+      }]
+    });
+    return res.status(200).json(roles);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
 const getRoleByID = async (req, res) => {
   try {
-    const role = await Role.findByPk(req.params.id);
+    const { id } = req.params;
+    const role = await Role.findByPk(id, {
+      include: [{
+        model: Permission,
+        as: 'permission'
+      }]
+    });
     if (role) {
-      res.status(200).json(role);
+      return res.status(200).json(role);
     } else {
-      res.status(404).json({ message: "Role not found" });
+      return res.status(404).json({ error: "Role not found..." });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
 const patchRole = async (req, res) => {
   try {
-    const role = await Role.findByPk(req.params.id);
-    if (role) {
-      const updatedRole = await role.update(req.body);
-      res.status(200).json(updatedRole);
-    } else {
-      res.status(404).json({ message: "Role not found" });
+    const { id } = req.params;
+    const { permissions, name, description } = req.body;
+
+    const role = await Role.findByPk(id);
+
+    if (!role) {
+      return res.status(404).json({ error: "Role not found..." });
     }
+
+    let permissionsUpdated = [...role.permission_id];
+
+    if ((permissions) && (permissions.length > 0)) {
+      permissions.map(async (permission_id) => {
+        await validateRecord(Permission, permission_id, 'Permission');
+      });
+
+      permissionsUpdated = permissions;
+    }
+
+    const updatedRole = await role.update({
+      permission_id: permissions,
+      name: isValidString(name) ? name : assignment.name,
+      description: isValidString(description) ? description : assignment.description,
+    });
+
+    return res.status(200).json(updatedRole);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    if (error.message.includes('not found')) {
+      return res.status(404).json({ error: error.message });
+    }
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
+// TODO: Check if validation is required
 const deleteRole = async (req, res) => {
   try {
-    const role = await Role.findByPk(req.params.id);
+    const { id } = req.params;
+    const role = await Role.findByPk(id);
     if (role) {
       await role.destroy();
-      res.status(204).json({ message: "Role deleted" });
+      return res.status(204).json({ message: "Role deleted successfully" });
     } else {
-      res.status(404).json({ message: "Role not found" });
+      return res.status(404).json({ error: "Role not found..." });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Something went wrong..." });
   }
 };
 
