@@ -1,17 +1,18 @@
 import express from "express";
-import {
+import stateFuctions from "../controllers/stateController.js";
+const {
   postState,
-  getStates,
+  getState,
   getStateByID,
   patchState,
   deleteState,
-} from "../controllers/stateController.js";
+} = stateFuctions;
 
 const router = express.Router();
 
 // Rutas
 router.post("/post", postState);
-router.get("", getStates);
+router.get("", getState);
 router.get("/:id", getStateByID);
 router.patch("/:id", patchState);
 router.put("/:id", patchState);

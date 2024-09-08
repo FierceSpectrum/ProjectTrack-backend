@@ -1,17 +1,18 @@
 import express from "express";
-import {
+import taskFuctions from "../controllers/taskController.js";
+const {
   postTask,
-  getTasks,
+  getTask,
   getTaskByID,
   patchTask,
   deleteTask,
-} from "../controllers/taskController.js";
+} = taskFuctions;
 
 const router = express.Router();
 
 // Rutas
 router.post("/post", postTask);
-router.get("", getTasks);
+router.get("", getTask);
 router.get("/:id", getTaskByID);
 router.patch("/:id", patchTask);
 router.put("/:id", patchTask);

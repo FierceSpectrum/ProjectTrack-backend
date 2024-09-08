@@ -8,12 +8,8 @@ const Role = sequelize.define("role", {
     primaryKey: true,
   },
   permissions_id: {
-    type: DataTypes.ARRAY,
+    type: DataTypes.ARRAY(DataTypes.INTEGER),
     allowNull: false,
-    references: {
-      model: "permission",
-      key: "id",
-    },
   },
   name: {
     type: DataTypes.STRING(100),

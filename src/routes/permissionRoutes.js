@@ -1,17 +1,18 @@
 import express from "express";
-import {
+import permissionFuctions from "../controllers/permissionController.js";
+const {
   postPermission,
-  getPermissions,
+  getPermission,
   getPermissionByID,
   patchPermission,
   deletePermission,
-} from "../controllers/permissionController.js";
+} = permissionFuctions;
 
 const router = express.Router();
 
 // Rutas
 router.post("/post", postPermission);
-router.get("", getPermissions);
+router.get("", getPermission);
 router.get("/:id", getPermissionByID);
 router.patch("/:id", patchPermission);
 router.put("/:id", patchPermission);

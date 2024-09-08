@@ -11,7 +11,7 @@ const Organization = sequelize.define("organization", {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "user",
+      model: "users",
       key: "id",
     },
   },

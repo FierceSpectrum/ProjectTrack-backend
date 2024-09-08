@@ -1,17 +1,18 @@
 import express from "express";
-import {
+import memberFuctions from "../controllers/memberController.js";
+const {
   postMember,
-  getMembers,
+  getMember,
   getMemberByID,
   patchMember,
   deleteMember,
-} from "../controllers/memberController.js";
+} = memberFuctions;
 
 const router = express.Router();
 
 // Rutas
 router.post("/post", postMember);
-router.get("", getMembers);
+router.get("", getMember);
 router.get("/:id", getMemberByID);
 router.patch("/:id", patchMember);
 router.put("/:id", patchMember);

@@ -14,7 +14,7 @@ const Permission = sequelize.define(
       allowNull: false,
     },
     description: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     state_permission: {

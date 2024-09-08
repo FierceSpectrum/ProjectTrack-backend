@@ -1,17 +1,18 @@
 import express from "express";
-import {
+import roleFuctions from "../controllers/roleController.js";
+const {
   postRole,
-  getRoles,
+  getRole,
   getRoleByID,
   patchRole,
   deleteRole,
-} from "../controllers/roleController.js";
+} = roleFuctions;
 
 const router = express.Router();
 
 // Rutas
 router.post("/post", postRole);
-router.get("", getRoles);
+router.get("", getRole);
 router.get("/:id", getRoleByID);
 router.patch("/:id", patchRole);
 router.put("/:id", patchRole);

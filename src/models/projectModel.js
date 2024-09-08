@@ -11,7 +11,7 @@ const Project = sequelize.define("project", {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "user",
+      model: "organizations",
       key: "id",
     },
   },
@@ -19,7 +19,7 @@ const Project = sequelize.define("project", {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "state",
+      model: "states",
       key: "id",
     },
   },

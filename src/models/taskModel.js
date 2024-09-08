@@ -13,7 +13,7 @@ const Task = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references:{
-        model:"project",
+        model:"projects",
         key:"id"
       }
     },
@@ -21,7 +21,7 @@ const Task = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references:{
-        model:"participant",
+        model:"participants",
         key:"id"
       }
     },
@@ -29,7 +29,7 @@ const Task = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references:{
-        model:"state",
+        model:"states",
         key:"id"
       }
     },
@@ -37,7 +37,7 @@ const Task = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references:{
-        model:"assignment",
+        model:"assignments",
         key:"id"
       }
     },
