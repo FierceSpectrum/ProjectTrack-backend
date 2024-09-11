@@ -68,7 +68,7 @@ function createControllerContent(name) {
   return `import ${capitalized} from "../models/${name}Model.js";
 
 // Funciones básicas: create, update, post, delete
-const post${capitalized} = async (req, res) => {
+export const post${capitalized} = async (req, res) => {
   try {
     const nueva${capitalized} = await ${capitalized}.create(req.body);
     res.status(201).json(nueva${capitalized});
@@ -77,7 +77,7 @@ const post${capitalized} = async (req, res) => {
   }
 };
 
-const get${capitalized}s = async (req, res) => {
+export const get${capitalized}s = async (req, res) => {
   try {
     const ${name}s = await ${capitalized}.findAll();
     res.status(200).json(${name}s);
@@ -86,7 +86,7 @@ const get${capitalized}s = async (req, res) => {
   }
 };
 
-const get${capitalized}ByID = async (req, res) => {
+export const get${capitalized}ByID = async (req, res) => {
   try {
     const ${name} = await ${capitalized}.findByPk(req.params.id);
     if (${name}) {
@@ -99,7 +99,7 @@ const get${capitalized}ByID = async (req, res) => {
   }
 };
 
-const patch${capitalized} = async (req, res) => {
+export const patch${capitalized} = async (req, res) => {
   try {
     const ${name} = await ${capitalized}.findByPk(req.params.id);
     if (${name}) {
@@ -113,7 +113,7 @@ const patch${capitalized} = async (req, res) => {
   }
 };
 
-const delete${capitalized} = async (req, res) => {
+export const delete${capitalized} = async (req, res) => {
   try {
     const ${name} = await ${capitalized}.findByPk(req.params.id);
     if (${name}) {
@@ -125,14 +125,6 @@ const delete${capitalized} = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
-};
-
-export default {
-  post${capitalized},
-  get${capitalized},
-  get${capitalized}ByID,
-  patch${capitalized},
-  delete${capitalized},
 };`;
 }
 
