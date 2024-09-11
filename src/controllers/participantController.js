@@ -31,7 +31,7 @@ const postParticipant = async (req, res) => {
   }
 };
 
-const getParticipant = async (req, res) => {
+const getParticipants = async (req, res) => {
   try {
     const { projectId } = req.params;
 
@@ -166,7 +166,7 @@ const deleteParticipant = async (req, res) => {
 
 export default {
   postParticipant,
-  getParticipant,
+  getParticipants,
   getParticipantByID,
   patchParticipant,
   deleteParticipant,

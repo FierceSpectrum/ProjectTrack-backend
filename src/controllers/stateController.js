@@ -22,7 +22,7 @@ const postState = async (req, res) => {
   }
 };
 
-const getState = async (req, res) => {
+const getStates = async (req, res) => {
   try {
     const states = await State.findAll();
     return res.status(200).json(states);
@@ -89,7 +89,7 @@ const deleteState = async (req, res) => {
 
 export default {
   postState,
-  getState,
+  getStates,
   getStateByID,
   patchState,
   deleteState,

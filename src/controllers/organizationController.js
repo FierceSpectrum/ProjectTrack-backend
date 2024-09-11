@@ -30,7 +30,7 @@ const postOrganization = async (req, res) => {
 };
 
 // TODO: Check if filter is required
-const getOrganization = async (req, res) => {
+const getOrganizations = async (req, res) => {
   try {
     const organizations = await Organization.findAll({
       include: {
@@ -113,7 +113,7 @@ const deleteOrganization = async (req, res) => {
 
 export default {
   postOrganization,
-  getOrganization,
+  getOrganizations,
   getOrganizationByID,
   patchOrganization,
   deleteOrganization,

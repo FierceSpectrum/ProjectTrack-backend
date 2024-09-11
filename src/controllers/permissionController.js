@@ -23,7 +23,7 @@ const postPermission = async (req, res) => {
   }
 };
 
-const getPermission = async (req, res) => {
+const getPermissions = async (req, res) => {
   try {
     const permissions = await Permission.findAll();
     return res.status(200).json(permissions);
@@ -87,7 +87,7 @@ const deletePermission = async (req, res) => {
 
 export default {
   postPermission,
-  getPermission,
+  getPermissions,
   getPermissionByID,
   patchPermission,
   deletePermission,

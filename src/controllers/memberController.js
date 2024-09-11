@@ -32,7 +32,7 @@ const postMember = async (req, res) => {
   }
 };
 
-const getMember = async (req, res) => {
+const getMembers = async (req, res) => {
   try {
     const { organizationId, roleId } = req.params;
 
@@ -170,7 +170,7 @@ const deleteMember = async (req, res) => {
 
 export default {
   postMember,
-  getMember,
+  getMembers,
   getMemberByID,
   patchMember,
   deleteMember,

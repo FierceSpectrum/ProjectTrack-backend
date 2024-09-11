@@ -31,7 +31,7 @@ const postRole = async (req, res) => {
   }
 };
 
-const getRole = async (req, res) => {
+const getRoles = async (req, res) => {
   try {
     const roles = await Role.findAll({
       include: [{
@@ -118,7 +118,7 @@ const deleteRole = async (req, res) => {
 
 export default {
   postRole,
-  getRole,
+  getRoles,
   getRoleByID,
   patchRole,
   deleteRole,

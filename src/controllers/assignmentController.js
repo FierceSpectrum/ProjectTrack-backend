@@ -33,7 +33,7 @@ const postAssignment = async (req, res) => {
   }
 };
 
-const getAssignment = async (req, res) => {
+const getAssignments = async (req, res) => {
   try {
     // TODO: Probar si con el `include` obtengo los detalles del otro modelo
     const assignments = await Assignment.findAll({
@@ -121,7 +121,7 @@ const deleteAssignment = async (req, res) => {
 
 export default {
   postAssignment,
-  getAssignment,
+  getAssignments,
   getAssignmentByID,
   patchAssignment,
   deleteAssignment,

@@ -34,7 +34,7 @@ const postProject = async (req, res) => {
   }
 };
 
-const getProject = async (req, res) => {
+const getProjects = async (req, res) => {
   try {
     const { organizationId, stateId } = req.params;
 
@@ -156,7 +156,7 @@ const deleteProject = async (req, res) => {
 
 export default {
   postProject,
-  getProject,
+  getProjects,
   getProjectByID,
   patchProject,
   deleteProject,

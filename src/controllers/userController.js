@@ -33,7 +33,7 @@ const postUser = async (req, res) => {
 };
 
 // TODO: Check if filter is required
-const getUser = async (req, res) => {
+const getUsers = async (req, res) => {
   try {
     const users = await User.findAll();
     return res.status(200).json(users);
@@ -96,7 +96,7 @@ const deleteUser = async (req, res) => {
 
 export default {
   postUser,
-  getUser,
+  getUsers,
   getUserByID,
   patchUser,
   deleteUser,
