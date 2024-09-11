@@ -5,7 +5,8 @@ import { sequelize } from "./src/config/database.js";
 
 dotenv.config();
 
-// Impotacion de Routes
+// Importación de IndexRoutes
+import indexRoutes from "./src/routes/index.js";
 
 // Impotacion de Middlewares
 
@@ -19,7 +20,8 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-// app.use("Ruta", fuction);
+// Use IndexRoutes
+app.use("/api", indexRoutes);
 
 // Sincroniza los modelos con la base de datos
 sequelize

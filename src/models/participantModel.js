@@ -11,7 +11,7 @@ const Participant = sequelize.define("participant", {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "project",
+      model: "projects",
       key: "id",
     },
   },
@@ -19,17 +19,13 @@ const Participant = sequelize.define("participant", {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "member",
+      model: "members",
       key: "id",
     },
   },
   assignments_id: {
-    type: DataTypes.ARRAY,
+    type: DataTypes.ARRAY(DataTypes.INTEGER),
     allowNull: false,
-    references: {
-      model: "assignment",
-      key: "id",
-    },
   },
   state_participant: {
     type: DataTypes.STRING,

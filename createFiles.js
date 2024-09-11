@@ -77,7 +77,7 @@ const post${capitalized} = async (req, res) => {
   }
 };
 
-const get${capitalized} = async (req, res) => {
+const get${capitalized}s = async (req, res) => {
   try {
     const ${name}s = await ${capitalized}.findAll();
     res.status(200).json(${name}s);
@@ -170,19 +170,20 @@ export default ${capitalized};`;
 function createRouterContent(name) {
   const capitalized = formatName(name);
   return `import express from "express";
-import {
+import ${name}Fuctions from "../controllers/${name}Controller.js";
+const {
   post${capitalized},
-  get${capitalized}s,
+  get${capitalized},
   get${capitalized}ByID,
   patch${capitalized},
   delete${capitalized},
-} from "../controllers/${name}Controller.js";
+} = ${name}Fuctions;
 
 const router = express.Router();
 
 // Rutas
 router.post("/post", post${capitalized});
-router.get("", get${capitalized}s);
+router.get("", get${capitalized});
 router.get("/:id", get${capitalized}ByID);
 router.patch("/:id", patch${capitalized});
 router.put("/:id", patch${capitalized});

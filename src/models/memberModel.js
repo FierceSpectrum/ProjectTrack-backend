@@ -11,7 +11,7 @@ const Member = sequelize.define("member", {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "organization",
+      model: "organizations",
       key: "id",
     },
   },
@@ -19,7 +19,7 @@ const Member = sequelize.define("member", {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "user",
+      model: "users",
       key: "id",
     },
   },
@@ -27,7 +27,7 @@ const Member = sequelize.define("member", {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: "role",
+      model: "roles",
       key: "id",
     },
   },

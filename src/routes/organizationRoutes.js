@@ -1,17 +1,18 @@
 import express from "express";
-import {
+import organizationFuctions from "../controllers/organizationController.js";
+const {
   postOrganization,
-  getOrganizations,
+  getOrganization,
   getOrganizationByID,
   patchOrganization,
   deleteOrganization,
-} from "../controllers/organizationController.js";
+} = organizationFuctions;
 
 const router = express.Router();
 
 // Rutas
 router.post("/post", postOrganization);
-router.get("", getOrganizations);
+router.get("", getOrganization);
 router.get("/:id", getOrganizationByID);
 router.patch("/:id", patchOrganization);
 router.put("/:id", patchOrganization);

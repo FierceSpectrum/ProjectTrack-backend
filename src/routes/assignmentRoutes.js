@@ -1,17 +1,18 @@
 import express from "express";
-import {
+import assignmentFuctions from "../controllers/assignmentController.js";
+const {
   postAssignment,
-  getAssignments,
+  getAssignment,
   getAssignmentByID,
   patchAssignment,
   deleteAssignment,
-} from "../controllers/assignmentController.js";
+} = assignmentFuctions;
 
 const router = express.Router();
 
 // Rutas
 router.post("/post", postAssignment);
-router.get("", getAssignments);
+router.get("", getAssignment);
 router.get("/:id", getAssignmentByID);
 router.patch("/:id", patchAssignment);
 router.put("/:id", patchAssignment);

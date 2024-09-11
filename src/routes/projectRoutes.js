@@ -1,17 +1,18 @@
 import express from "express";
-import {
+import projectFuctions from "../controllers/projectController.js";
+const {
   postProject,
-  getProjects,
+  getProject,
   getProjectByID,
   patchProject,
   deleteProject,
-} from "../controllers/projectController.js";
+} = projectFuctions;
 
 const router = express.Router();
 
 // Rutas
 router.post("/post", postProject);
-router.get("", getProjects);
+router.get("", getProject);
 router.get("/:id", getProjectByID);
 router.patch("/:id", patchProject);
 router.put("/:id", patchProject);
