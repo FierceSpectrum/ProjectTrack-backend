@@ -2,7 +2,7 @@ import express from "express";
 import stateFuctions from "../controllers/stateController.js";
 const {
   postState,
-  getState,
+  getStates,
   getStateByID,
   patchState,
   deleteState,
@@ -12,7 +12,7 @@ const router = express.Router();
 
 // Rutas
 router.post("/post", postState);
-router.get("", getState);
+router.get("", getStates);
 router.get("/:id", getStateByID);
 router.patch("/:id", patchState);
 router.put("/:id", patchState);

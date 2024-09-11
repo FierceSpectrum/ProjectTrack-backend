@@ -2,7 +2,7 @@ import express from "express";
 import taskFuctions from "../controllers/taskController.js";
 const {
   postTask,
-  getTask,
+  getTasks,
   getTaskByID,
   patchTask,
   deleteTask,
@@ -12,7 +12,7 @@ const router = express.Router();
 
 // Rutas
 router.post("/post", postTask);
-router.get("", getTask);
+router.get("", getTasks);
 router.get("/:id", getTaskByID);
 router.patch("/:id", patchTask);
 router.put("/:id", patchTask);

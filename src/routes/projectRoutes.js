@@ -2,7 +2,7 @@ import express from "express";
 import projectFuctions from "../controllers/projectController.js";
 const {
   postProject,
-  getProject,
+  getProjects,
   getProjectByID,
   patchProject,
   deleteProject,
@@ -12,7 +12,7 @@ const router = express.Router();
 
 // Rutas
 router.post("/post", postProject);
-router.get("", getProject);
+router.get("", getProjects);
 router.get("/:id", getProjectByID);
 router.patch("/:id", patchProject);
 router.put("/:id", patchProject);

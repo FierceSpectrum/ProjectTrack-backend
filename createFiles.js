@@ -173,7 +173,7 @@ function createRouterContent(name) {
 import ${name}Fuctions from "../controllers/${name}Controller.js";
 const {
   post${capitalized},
-  get${capitalized},
+  get${capitalized}s,
   get${capitalized}ByID,
   patch${capitalized},
   delete${capitalized},
@@ -183,7 +183,7 @@ const router = express.Router();
 
 // Rutas
 router.post("/post", post${capitalized});
-router.get("", get${capitalized});
+router.get("", get${capitalized}s);
 router.get("/:id", get${capitalized}ByID);
 router.patch("/:id", patch${capitalized});
 router.put("/:id", patch${capitalized});

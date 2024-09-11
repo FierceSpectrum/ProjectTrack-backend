@@ -2,7 +2,7 @@ import express from "express";
 import memberFuctions from "../controllers/memberController.js";
 const {
   postMember,
-  getMember,
+  getMembers,
   getMemberByID,
   patchMember,
   deleteMember,
@@ -12,7 +12,7 @@ const router = express.Router();
 
 // Rutas
 router.post("/post", postMember);
-router.get("", getMember);
+router.get("", getMembers);
 router.get("/:id", getMemberByID);
 router.patch("/:id", patchMember);
 router.put("/:id", patchMember);
