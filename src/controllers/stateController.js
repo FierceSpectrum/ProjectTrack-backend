@@ -1,62 +1,89 @@
 import State from "../models/stateModel.js";
 
-// Funciones básicas: create, update, post, delete
+import { isValidString } from '../utils/validateString.js';
+
 const postState = async (req, res) => {
   try {
-    const nuevaState = await State.create(req.body);
-    res.status(201).json(nuevaState);
+    const { name, description } = req.body;
+    if (!isValidString(name) || !isValidString(description)) {
+      return res.status(400).json({ error: 'Invalid Data...' });
+    }
+    const newState = await State.create({
+      name,
+      description,
+    });
+    return res
+      .status(201)
+      .header({ location: `/api/states/post?id=${newState.id}` })
+      .json(newState);
+
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
 const getState = async (req, res) => {
   try {
     const states = await State.findAll();
-    res.status(200).json(states);
+    return res.status(200).json(states);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
 const getStateByID = async (req, res) => {
   try {
-    const state = await State.findByPk(req.params.id);
+    const { id } = req.params;
+
+    const state = await State.findByPk(id);
+
     if (state) {
-      res.status(200).json(state);
+      return res.status(200).json(state);
     } else {
-      res.status(404).json({ message: "State not found" });
+      return res.status(404).json({ error: "State not found..." });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
 const patchState = async (req, res) => {
   try {
-    const state = await State.findByPk(req.params.id);
+    const { id } = req.params;
+
+    const state = await State.findByPk(id);
+
     if (state) {
-      const updatedState = await state.update(req.body);
-      res.status(200).json(updatedState);
+      const { name, description } = req.body;
+
+      const updatedState = await state.update({
+        name: isValidString(name) ? name : state.name,
+        description: isValidString(description) ? description : state.description,
+      });
+
+      return res.status(200).json(updatedState);
     } else {
-      res.status(404).json({ message: "State not found" });
+      return res.status(404).json({ error: "State not found..." });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
+// TODO: Check if validation is required
 const deleteState = async (req, res) => {
   try {
-    const state = await State.findByPk(req.params.id);
+    const { id } = req.params;
+
+    const state = await State.findByPk(id);
     if (state) {
       await state.destroy();
-      res.status(204).json({ message: "State deleted" });
+      return res.status(204).json({ message: "State deleted successfully" });
     } else {
-      res.status(404).json({ message: "State not found" });
+      return res.status(404).json({ error: "State not found..." });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: 'Something went wrong...' });
   }
 };
 
