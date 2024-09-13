@@ -1,18 +1,23 @@
 import User from "../models/userModel.js";
-import { isValidString } from "../utils/validateString.js";
+import { isValidString } from "../utils/validate/string.js";
 
 const isValidEmail = async (email) => {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
-}
+};
 
 const postUser = async (req, res) => {
   try {
     const { name, last_Name, email, password, user_Name } = req.body;
 
-    if ((!isValidString(name)) || (!isValidString(last_Name)) || (!isValidEmail(email)) ||
-      (!password.length > 8) || (!isValidString(user_Name))) {
-      return res.status(400).json({ error: 'Invalid Data...' });
+    if (
+      !isValidString(name) ||
+      !isValidString(last_Name) ||
+      !isValidEmail(email) ||
+      !password.length > 8 ||
+      !isValidString(user_Name)
+    ) {
+      return res.status(400).json({ error: "Invalid Data..." });
     }
 
     const newUser = await User.create({
@@ -20,15 +25,14 @@ const postUser = async (req, res) => {
       last_Name,
       email,
       password,
-      user_Name
+      user_Name,
     });
     return res
       .status(201)
       .header({ location: `/api/users/post?id=${newUser.id}` })
       .json(newUser);
-
   } catch (error) {
-    return res.status(500).json({ error: 'Something went wrong...' });
+    return res.status(500).json({ error: "Something went wrong..." });
   }
 };
 
@@ -38,7 +42,7 @@ const getUsers = async (req, res) => {
     const users = await User.findAll();
     return res.status(200).json(users);
   } catch (error) {
-    return res.status(500).json({ error: 'Something went wrong...' });
+    return res.status(500).json({ error: "Something went wrong..." });
   }
 };
 
@@ -52,7 +56,7 @@ const getUserByID = async (req, res) => {
       return res.status(404).json({ error: "User not found..." });
     }
   } catch (error) {
-    return res.status(500).json({ error: 'Something went wrong...' });
+    return res.status(500).json({ error: "Something went wrong..." });
   }
 };
 
@@ -69,12 +73,12 @@ const patchUser = async (req, res) => {
       name: isValidString(name) ? name : user.name,
       last_Name: isValidString(last_Name) ? last_Name : user.last_Name,
       email: isValidEmail(email) ? email : user.email,
-      password: (password?.length > 8) ? password : user.password,
+      password: password?.length > 8 ? password : user.password,
       user_Name: isValidString(user_Name) ? user_Name : user.user_Name,
     });
     return res.status(200).json(updatedUser);
   } catch (error) {
-    return res.status(500).json({ error: 'Something went wrong...' });
+    return res.status(500).json({ error: "Something went wrong..." });
   }
 };
 
@@ -90,7 +94,7 @@ const deleteUser = async (req, res) => {
       res.status(404).json({ error: "User not found..." });
     }
   } catch (error) {
-    return res.status(500).json({ error: 'Something went wrong...' });
+    return res.status(500).json({ error: "Something went wrong..." });
   }
 };
 

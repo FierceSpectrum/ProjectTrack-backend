@@ -67,7 +67,11 @@ function createControllerContent(name) {
   const capitalized = formatName(name);
   return `import ${capitalized} from "../models/${name}Model.js";
 
-// Funciones básicas: create, update, post, delete
+/**
+ * Crea un nuevo ${name}
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} res - Objeto de respuesta de Express.
+ */
 const post${capitalized} = async (req, res) => {
   try {
     const nueva${capitalized} = await ${capitalized}.create(req.body);
@@ -77,6 +81,11 @@ const post${capitalized} = async (req, res) => {
   }
 };
 
+/**
+ * Obtiene todos los ${name}s
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} res - Objeto de respuesta de Express.
+ */
 const get${capitalized}s = async (req, res) => {
   try {
     const ${name}s = await ${capitalized}.findAll();
@@ -86,6 +95,11 @@ const get${capitalized}s = async (req, res) => {
   }
 };
 
+/**
+ * Obtiene un ${name} por ID
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} res - Objeto de respuesta de Express.
+ */
 const get${capitalized}ByID = async (req, res) => {
   try {
     const ${name} = await ${capitalized}.findByPk(req.params.id);
@@ -99,6 +113,11 @@ const get${capitalized}ByID = async (req, res) => {
   }
 };
 
+/**
+ * Actualiza un ${name} por ID
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} res - Objeto de respuesta de Express.
+ */
 const patch${capitalized} = async (req, res) => {
   try {
     const ${name} = await ${capitalized}.findByPk(req.params.id);
@@ -113,7 +132,31 @@ const patch${capitalized} = async (req, res) => {
   }
 };
 
+/**
+ * Elimina un ${name} por ID
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} res - Objeto de respuesta de Express.
+ */
 const delete${capitalized} = async (req, res) => {
+  try {
+    const ${name} = await ${capitalized}.findByPk(req.params.id);
+    if (${name}) {
+      await ${name}.update({ state_${name}: "Delete" });
+      res.status(204).json({ message: "${capitalized} deleted" });
+    } else {
+      res.status(404).json({ message: "${capitalized} not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+/**
+ * Elimina un ${name} por ID
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} res - Objeto de respuesta de Express.
+ */
+const destroy${capitalized} = async (req, res) => {
   try {
     const ${name} = await ${capitalized}.findByPk(req.params.id);
     if (${name}) {
