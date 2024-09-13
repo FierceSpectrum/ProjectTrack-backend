@@ -2,7 +2,6 @@ import Assignment from "../models/assignmentModel.js";
 import Permission from "../models/permissionModel.js";
 import { isValidString } from "../utils/validateString.js";
 
-// TODO: Probar con la base de datos que todo funcione exitosamente
 export const postAssignment = async (req, res) => {
   try {
     const { permissions, name, description } = req.body;
@@ -28,7 +27,9 @@ export const postAssignment = async (req, res) => {
     if (error.message.includes("not found")) {
       return res.status(404).json({ error: error.message });
     }
-    return res.status(500).json({ error: "Something went wrong..." });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong...", details: error });
   }
 };
 
@@ -45,7 +46,9 @@ export const getAssignments = async (req, res) => {
     });
     return res.status(200).json(assignments);
   } catch (error) {
-    return res.status(500).json({ error: "Something went wrong..." });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong...", details: error });
   }
 };
 
@@ -67,7 +70,9 @@ export const getAssignmentByID = async (req, res) => {
       return res.status(404).json({ error: "Assignment not found..." });
     }
   } catch (error) {
-    return res.status(500).json({ error: "Something went wrong..." });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong...", details: error });
   }
 };
 
@@ -104,7 +109,9 @@ export const patchAssignment = async (req, res) => {
     if (error.message.includes("not found")) {
       return res.status(404).json({ error: error.message });
     }
-    return res.status(500).json({ error: "Something went wrong..." });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong...", details: error });
   }
 };
 
@@ -122,6 +129,8 @@ export const deleteAssignment = async (req, res) => {
       return res.status(404).json({ error: "Assignment not found..." });
     }
   } catch (error) {
-    return res.status(500).json({ error: "Something went wrong..." });
+    return res
+      .status(500)
+      .json({ error: "Something went wrong...", details: error });
   }
 };

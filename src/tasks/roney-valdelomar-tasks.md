@@ -7,7 +7,7 @@
 
 ## Tareas Generales
 
-### 1. Actualizar la estructura de los controladores ⏳
+### 1. Actualizar la estructura de los controladores ✅
 - Exportar directamente cada función HTTP.
 - Evitar `export default`.
 - Mantener solo funciones HTTP en el controlador.
