@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Configuración para el pool de conexiones con pg
-const pool = new Pool({
+export const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
@@ -16,7 +16,7 @@ const pool = new Pool({
 });
 
 // Configuración de Sequelize para PostgreSQL
-const sequelize = new Sequelize(
+export const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
   process.env.DB_PASSWORD,
@@ -27,5 +27,3 @@ const sequelize = new Sequelize(
     logging: false, // Puedes habilitar el registro de consultas SQL si es necesario
   }
 );
-
-export { pool, sequelize };
