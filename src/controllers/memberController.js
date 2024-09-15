@@ -2,7 +2,7 @@ import Member from "../models/memberModel.js";
 import Organization from "../models/organizationModel.js";
 import User from "../models/userModel.js";
 import Role from "../models/roleModel.js";
-import { validateRecord } from "../utils/validateRecord.js";
+import { validateRecord } from "../utils/validate/record.js";
 
 export const postMember = async (req, res) => {
   try {
@@ -13,6 +13,19 @@ export const postMember = async (req, res) => {
     await validateRecord(User, user_id, "User");
     await validateRecord(Role, role_id, "Role");
 
+    const existingMember = await Member.findOne({
+      where: {
+        user_id,
+        organization_id,
+      },
+    });
+
+    if (existingMember) {
+      return res.status(400).json({
+        message: "This user is already a member of this organization.",
+      });
+    }
+
     const newMember = await Member.create({
       organization_id,
       user_id,
@@ -20,37 +33,38 @@ export const postMember = async (req, res) => {
     });
     return res
       .status(201)
-      .header({ location: `/api/members/post?id=${newMember.id}` })
-      .json(newMember);
+      .header({ location: `/api/members/${newMember.id}` })
+      .json({
+        message: "Member created successfully",
+        memberId: newMember.id,
+      });
   } catch (error) {
-    // Distinguish between validation and internal errors
+    console.error("Error creating member:", error);
     if (error.message.includes("not found")) {
-      return res.status(404).json({ error: error.message });
+      return res.status(404).json({ message: error.message });
     }
-    return res.status(500).json({ error: "Something went wrong..." });
+    if (error.message.includes("Invalid")) {
+      return res.status(400).json({ message: error.message });
+    }
+    return res.status(500).json({
+      message: "Something went wrong while creating the member",
+      errors: error,
+    });
   }
 };
 
 export const getMembers = async (req, res) => {
   try {
-    const { organizationId, roleId } = req.params;
+    const { organizationId } = req.params;
 
     if (!organizationId) {
       return res
         .status(400)
-        .json({ error: "You must provide an organizationID..." });
+        .json({ message: "You must provide an organizationID..." });
     }
 
-    const filter = { organization_id: organizationId };
-
-    if (roleId) {
-      // Filter members by role
-      filter.role_id = roleId;
-    }
-
-    // TODO: Añadir el `include`
     const members = await Member.findAll({
-      where: filter,
+      where: { organization_id: organizationId, state_member: "Create" },
       include: [
         {
           model: Organization,
@@ -65,15 +79,16 @@ export const getMembers = async (req, res) => {
           as: "role",
         },
       ],
+      order: [["id", "ASC"]],
     });
-
-    if (members.length === 0) {
-      return res.status(404).json({ error: "Members not found..." });
-    }
 
     return res.status(200).json(members);
   } catch (error) {
-    return res.status(500).json({ error: "Something went wrong..." });
+    console.error("Error fetching members:", error);
+    return res.status(500).json({
+      message: "Something went wrong while fetching members",
+      errors: error,
+    });
   }
 };
 
@@ -82,10 +97,11 @@ export const getMemberByID = async (req, res) => {
     const { id } = req.params;
 
     if (isNaN(id)) {
-      return res.status(400).json({ error: "Invalid ID format..." });
+      return res.status(400).json({ message: "Invalid ID format" });
     }
 
-    const member = await Member.findByPk(id, {
+    const member = await Member.findOne({
+      where: { id, state_member: "Created" },
       include: [
         {
           model: Organization,
@@ -101,13 +117,18 @@ export const getMemberByID = async (req, res) => {
         },
       ],
     });
-    if (member) {
-      return res.status(200).json(member);
-    } else {
-      return res.status(404).json({ error: "Member not found..." });
+
+    if (!member) {
+      return res.status(404).json({ message: "Member not found" });
     }
+
+    return res.status(200).json(member);
   } catch (error) {
-    return res.status(500).json({ error: "Something went wrong..." });
+    console.error("Error fetching member by ID:", error);
+    return res.status(500).json({
+      message: "Something went wrong while fetching the member",
+      errors: error,
+    });
   }
 };
 
@@ -117,53 +138,106 @@ export const patchMember = async (req, res) => {
     const { organization_id, user_id, role_id } = req.body;
 
     if (isNaN(id)) {
-      return res.status(400).json({ error: "Invalid ID format..." });
+      return res.status(400).json({ message: "Invalid ID format" });
     }
 
-    const member = await Member.findByPk(id);
+    const member = await Member.findOne({
+      where: { id, state_member: "Created" },
+    });
+
     if (!member) {
-      return res.status(404).json({ error: "Member not found..." });
+      return res.status(404).json({ message: "Member not found" });
     }
 
-    let updates = { ...member.toJSON() };
+    let updatedMember = {};
 
     if (organization_id) {
       await validateRecord(Organization, organization_id, "Organization");
-      updates.organization_id = organization_id;
+      updatedMember["organization_id"] = organization_id;
     }
 
     if (user_id) {
       await validateRecord(User, user_id, "User");
-      updates.user_id = user_id;
+      updatedMember["user_id"] = user_id;
     }
 
     if (role_id) {
       await validateRecord(Role, role_id, "Role");
-      updates.role_id = role_id;
+      updatedMember["role_id"] = role_id;
     }
 
-    const updatedMember = await member.update(updates);
-    return res.status(200).json(updatedMember);
-  } catch (error) {
-    if (error.message.includes("not found")) {
-      return res.status(404).json({ error: error.message });
+    if (Object.keys(updatedMember).length > 0) {
+      await member.update(updatedMember);
+      return res.status(200).json({ message: "Member updated successfully" });
+    } else {
+      return res.status(304).json({ message: "No changes were made" });
     }
-    return res.status(500).json({ error: "Something went wrong..." });
+  } catch (error) {
+    console.error("Error updating member:", error);
+    if (error.message.includes("not found")) {
+      return res.status(404).json({ message: error.message });
+    }
+    if (error.message.includes("Invalid")) {
+      return res.status(400).json({ message: error.message });
+    }
+    return res.status(500).json({
+      message: "Something went wrong while updating the member",
+      errors: error,
+    });
   }
 };
 
-// TODO: Check if validation is required
 export const deleteMember = async (req, res) => {
   try {
     const { id } = req.params;
-    const member = await Member.findByPk(id);
-    if (member) {
-      await member.destroy();
-      return res.status(204).json({ message: "Member deleted successfully" });
-    } else {
-      return res.status(404).json({ error: "Member not found..." });
+
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "Invalid ID format" });
     }
+    
+    const member = await Member.findOne({
+      where: { id, state_member: "Create" },
+    });
+
+    if (!member) {
+      return res.status(404).json({ message: "Member not found" });
+    }
+
+    await member.update({ state_member: "Delete" });
+    return res.status(204).json({ message: "Member deleted successfully" });
   } catch (error) {
-    return res.status(500).json({ error: "Something went wrong..." });
+    console.error("Error deleting member:", error);
+    return res.status(500).json({
+      message: "Something went wrong while deleting the member",
+      errors: error,
+    });
+  }
+};
+
+export const destroyMember = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "Invalid ID format" });
+    }
+
+    const member = await Member.findOne({
+      where: { id, state_member: "Delete" },
+    });
+    if (!member) {
+      return res.status(404).json({ message: "Member not found" });
+    }
+
+    await member.destroy();
+    return res
+      .status(204)
+      .json({ message: "Member destroyed successfully" });
+  } catch (error) {
+    console.error("Error destroying member:", error);
+    return res.status(500).json({
+      message: "Something went wrong while destroying the member",
+      errors: error,
+    });
   }
 };

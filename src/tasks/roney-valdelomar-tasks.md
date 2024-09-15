@@ -27,7 +27,7 @@ export const update = async (req, res) => { / ... / };
 // ...
 ```
 
-### 2. Manejo de errores ⏳
+### 2. Manejo de errores ✅
 - Estandarizar bloques try-catch.
 - Definir mensajes de error específicos.
 - Revisar códigos de estado HTTP.
@@ -47,24 +47,24 @@ res.status(500).json({ message: 'Error interno del servidor' });
 };
 ```
 
-### 3. Validaciones de modelos y datos de entrada ⏳
+### 3. Validaciones de modelos y datos de entrada ✅
 - Revisar validaciones de atributos.
 - Implementar validaciones reutilizables.
 - Crear array de validaciones para controladores.
 
-### 4. Soft delete y manejo de eliminación ⏳
+### 4. Soft delete y manejo de eliminación ✅
 - Implementar soft delete.
 - Crear función `destroy` con validación de estado.
 
-### 5. Consultas a la base de datos ⏳
+### 5. Consultas a la base de datos ✅
 - Reemplazar `findByPk` con `findOne`.
 - Filtrar por estado en todas las operaciones.
 
-### 6. Optimización de actualizaciones parciales ⏳
+### 6. Optimización de actualizaciones parciales ✅
 - Crear función `updateField` en cada controlador.
 - Usar hooks `beforeUpdate` cuando sea necesario.
 
-### 7. Estandarización de respuestas HTTP ⏳
+### 7. Estandarización de respuestas HTTP ✅
 - Asegurar respuestas consistentes en JSON.
 - Incluir encabezados relevantes.
 
@@ -74,7 +74,7 @@ res.status(500).json({ message: 'Error interno del servidor' });
 - Identificar atributos inmutables.
 - Implementar lógica en PATCH para protegerlos.
 
-### 2. Implementar validaciones en el PATCH ⏳
+### 2. Implementar validaciones en el PATCH ✅
 - Validar estado antes de actualizar.
 - Asegurar validación de datos.
 
@@ -100,13 +100,13 @@ export const create = async (req: Request, res: Response): Promise<Response> => 
 - Verificar cumplimiento de reglas de negocio.
 - Revisar relaciones entre modelos.
 
-### 5. Mejorar gestión de imports y exports ⏳
+### 5. Mejorar gestión de imports y exports ✅
 - Revisar imports y exports en controladores.
 - Asegurar desacoplamiento de funciones.
 
 ## Ejemplo Detallado: Actualizar UserController
 
-1. Implementar validaciones robustas ⏳
+1. Implementar validaciones robustas ✅
 
 ```javascript
 import { validateEmail, validatePassword } from '../utils/validation';
@@ -118,13 +118,13 @@ const userValidations = [
 ```
 
 
-2. Usar `findOne` en lugar de `findByPk` ⏳
+2. Usar `findOne` en lugar de `findByPk` ✅
 
 ```javascript
 const user = await User.findOne({ where: { id, status: 'active' } });
 ```
 
-3. Implementar soft delete ⏳
+3. Implementar soft delete ✅
 
 ```javascript
 export const softDelete = async (req, res) => {
