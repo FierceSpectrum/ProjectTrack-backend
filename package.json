@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "create": "node createFiles.js"
+    "create": "node createFiles.js",
+    "import": "node importRoutes.js"
   },
   "repository": {
     "type": "git",
