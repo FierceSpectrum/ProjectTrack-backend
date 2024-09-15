@@ -1,0 +1,4 @@
+- Tipos de pruebas: Unitarias, de integración, funcionales, de rendimiento, etc.
+- Herramientas: Indica qué herramientas vas a usar (Jest, Mocha, Postman, etc.).
+- Cobertura: Explica qué áreas deben ser cubiertas por las pruebas.
+- Casos de Prueba: Lista de casos de prueba que definen qué se va a probar y qué se espera como resultado.
