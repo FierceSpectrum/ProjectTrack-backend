@@ -64,7 +64,7 @@ res.status(500).json({ message: 'Error interno del servidor' });
 - Crear función `updateField` en cada controlador.
 - Usar hooks `beforeUpdate` cuando sea necesario.
 
-### 7. Estandarización de respuestas HTTP ✅
+### 7. Estandarización de respuestas HTTP ⏳
 - Asegurar respuestas consistentes en JSON.
 - Incluir encabezados relevantes.
 
