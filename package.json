@@ -9,7 +9,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "create": "node createFiles.js",
-    "import": "node importRoutes.js"
+    "import": "node importRoutes.js",
+    "mount": "node mountDataBase.js"
   },
   "repository": {
     "type": "git",
