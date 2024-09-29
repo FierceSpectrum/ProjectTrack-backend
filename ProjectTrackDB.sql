@@ -1,4 +1,4 @@
--- Active: 1726437336953@@127.0.0.1@5432@Pruebascript1
+-- Active: 1726437336953@@127.0.0.1@5432@ProjectTrack
 
 DROP TABLE IF EXISTS permissions CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
