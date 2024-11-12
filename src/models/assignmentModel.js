@@ -7,10 +7,10 @@ const Assignment = sequelize.define("assignment", {
     autoIncrement: true,
     primaryKey: true,
   },
-  permissions_id: {
-    type: DataTypes.ARRAY(DataTypes.INTEGER),
-    allowNull: false,
-  },
+  // permissions_id: {
+  //   type: DataTypes.ARRAY(DataTypes.INTEGER),
+  //   allowNull: false,
+  // },
   name: {
     type: DataTypes.STRING(100),
     allowNull: false,
