@@ -1,5 +1,6 @@
 -- Active: 1726437336953@@127.0.0.1@5432@ProjectTrack
 
+DROP TABLE IF EXISTS assignment_permissions CASCADE;
 DROP TABLE IF EXISTS permissions CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
 DROP TABLE IF EXISTS assignments CASCADE;
@@ -34,7 +35,6 @@ CREATE TABLE roles(
 
 CREATE TABLE assignments(
     id SERIAL NOT NULL,
-    permissions_id integer[] NOT NULL,
     name varchar(100) NOT NULL,
     description text NOT NULL,
     state_assignment varchar(255) NOT NULL DEFAULT 'Create'::character varying,
@@ -140,6 +140,18 @@ CREATE TABLE tasks(
     CONSTRAINT tasks_assignment_id_fkey FOREIGN key(assignment_id) REFERENCES assignments(id)
 );
 
+CREATE TABLE assignment_permissions(
+    id SERIAL NOT NULL,
+    assignment_id integer NOT NULL,
+    permission_id integer NOT NULL,
+    state_assignment_permissions varchar(255) NOT NULL DEFAULT 'Create'::character varying,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    PRIMARY KEY(id),
+    CONSTRAINT assignment_permissions_assignment_id_fkey FOREIGN key(assignment_id) REFERENCES assignments(id),
+    CONSTRAINT assignment_permissions_permission_id_fkey FOREIGN key(permission_id) REFERENCES permissions(id)
+);
+CREATE UNIQUE INDEX assignment_permissions_assignment_id_permission_id_key ON assignment_permissions USING btree ("assignment_id","permission_id");
 
 insert into permissions (name, description, state_permission, "createdAt", "updatedAt") VALUES
 ('Create_Users', 'Permiso para crear usuarios', 'Create', now(), now()),
@@ -188,10 +200,43 @@ insert into roles (permissions_id, name, description, state_role, "createdAt", "
 ('{6,14}', 'Member', 'Miembro que solo puede ver la organización y los proyectos asignados, sin permisos de edición o creación', 'Create', now(), now()),
 ('{6,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,29,30,31,32,33,34,35,36,37,38,39,40}', 'Moderator', 'Moderador que puede gestionar proyectos y asignaciones, pero sin control sobre la organización o los roles de administradores', 'Create', now(), now());
 
-insert into assignments (permissions_id, name, description, state_assignment, "createdAt", "updatedAt") VALUES
-('{7,8,9,10,11,12,17,18,19,20,29,30,31,32,33,34,35,36,37,38,39,40}', 'ProjectManager', 'Administrador de projecto con permisos completos para gestionar el proyecto', 'Create', now(), now()),
-('{10,18,34,35,38}', 'Collaborator', 'Colaborador solo puede ver el proyecto, ademas de poder partisipar en las tareas', 'Create', now(), now()),
-('{10,18,34,38}', 'Spectator', 'Espectador solo puede ver el projecto nada mas', 'Create',	now(), now());
+insert into assignments (name, description, state_assignment, "createdAt", "updatedAt") VALUES
+('ProjectManager', 'Administrador de projecto con permisos completos para gestionar el proyecto', 'Create', now(), now()),
+('Collaborator', 'Colaborador solo puede ver el proyecto, ademas de poder partisipar en las tareas', 'Create', now(), now()),
+('Spectator', 'Espectador solo puede ver el projecto nada mas', 'Create', now(), now());
+
+insert into assignment_permissions (assignment_id, permission_id, state_assignment_permissions, "createdAt", "updatedAt") VALUES
+(1, 7, 'Create', now(), now()),
+(1, 8, 'Create', now(), now()),
+(1, 9, 'Create', now(), now()),
+(1, 10, 'Create', now(), now()),
+(1, 11, 'Create', now(), now()),
+(1, 12, 'Create', now(), now()),
+(1, 17, 'Create', now(), now()),
+(1, 18, 'Create', now(), now()),
+(1, 19, 'Create', now(), now()),
+(1, 20, 'Create', now(), now()),
+(1, 29, 'Create', now(), now()),
+(1, 30, 'Create', now(), now()),
+(1, 31, 'Create', now(), now()),
+(1, 32, 'Create', now(), now()),
+(1, 33, 'Create', now(), now()),
+(1, 34, 'Create', now(), now()),
+(1, 35, 'Create', now(), now()),
+(1, 36, 'Create', now(), now()),
+(1, 37, 'Create', now(), now()),
+(1, 38, 'Create', now(), now()),
+(1, 39, 'Create', now(), now()),
+(1, 40, 'Create', now(), now()),
+(2, 10, 'Create', now(), now()),
+(2, 18, 'Create', now(), now()),
+(2, 34, 'Create', now(), now()),
+(2, 35, 'Create', now(), now()),
+(2, 38, 'Create', now(), now()),
+(3, 10, 'Create', now(), now()),
+(3, 18, 'Create', now(), now()),
+(3, 34, 'Create', now(), now()),
+(3, 38, 'Create', now(), now());
 
 insert into states (name, description, state_state, "createdAt", "updatedAt") VALUES
 ('Pendiente', 'El proyecto o tarea está pendiente de inicio', 'Create', now(), now()),
