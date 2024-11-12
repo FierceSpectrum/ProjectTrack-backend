@@ -9,19 +9,11 @@ const Assignment_permissions = sequelize.define("assignment_permissions", {
   },
   assignment_id: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: "assignment",
-      key: "id",
-    },
+    allowNull: false
   },
   permission_id: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: "permission",
-      key: "id",
-    },
+    allowNull: false
   },
   state_assignment_permissions: {
     type: DataTypes.STRING,
