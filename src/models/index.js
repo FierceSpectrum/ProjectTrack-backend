@@ -68,18 +68,18 @@ Permission.belongsToMany(Role, {
 });
 
 // Relaciones Many-to-Many entre User y Organization usando una tabla intermedia
-Organization.belongsToMany(User, {
-  through: "organization_users",  // Definir una tabla intermedia aquí
-  foreignKey: "organization_id",
-  otherKey: "user_id",
-  as: "users"
-});
-
 User.belongsToMany(Organization, {
-  through: "organization_users",
+  through: "user_organizations",
   foreignKey: "user_id",
   otherKey: "organization_id",
   as: "organizations"
+});
+
+Organization.belongsToMany(User, {
+  through: "user_organizations",  // Definir una tabla intermedia aquí
+  foreignKey: "organization_id",
+  otherKey: "user_id",
+  as: "users"
 });
 
 // Relaciones Many-to-Many entre Member y Organization
