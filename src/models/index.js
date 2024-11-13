@@ -67,7 +67,6 @@ Permission.belongsToMany(Role, {
   as: "roles"
 });
 
-// Relaciones Many-to-Many entre User y Organization usando una tabla intermedia
 User.belongsToMany(Organization, {
   through: "user_organizations",
   foreignKey: "user_id",
@@ -76,62 +75,73 @@ User.belongsToMany(Organization, {
 });
 
 Organization.belongsToMany(User, {
-  through: "user_organizations",  // Definir una tabla intermedia aquí
+  through: "user_organizations",
   foreignKey: "organization_id",
   otherKey: "user_id",
   as: "users"
 });
 
-// Relaciones Many-to-Many entre Member y Organization
-Organization.belongsToMany(Member, {
-  through: "organization_members",  // Definir una tabla intermedia aquí
+// Relaciones Many-to-Many entre Task y Participant
+Task.belongsToMany(Participant, {
+  through: "task_participants",
+  foreignKey: "task_id",
+  otherKey: "participant_id",
+  as: "participants"
+});
+
+Participant.belongsToMany(Task, {
+  through: "task_participants",
+  foreignKey: "participant_id",
+  otherKey: "task_id",
+  as: "tasks"
+});
+
+// Relaciones Many-to-Many entre Task y Assignment
+Task.belongsToMany(Assignment, {
+  through: "task_assignments",
+  foreignKey: "task_id",
+  otherKey: "assignment_id",
+  as: "assignments"
+});
+
+Assignment.belongsToMany(Task, {
+  through: "task_assignments",
+  foreignKey: "assignment_id",
+  otherKey: "task_id",
+  as: "tasks"
+});
+
+// Relaciones One-to-Many entre Organization y Member
+Organization.hasMany(Member, {
   foreignKey: "organization_id",
-  otherKey: "member_id",
   as: "members"
 });
 
-Member.belongsToMany(Organization, {
-  through: "organization_members",
-  foreignKey: "member_id",
-  otherKey: "organization_id",
-  as: "organizations"
-});
-
-// Relaciones Many-to-Many entre Organization y Project
-Organization.belongsToMany(Project, {
-  through: "organization_projects",  // Definir una tabla intermedia aquí
+Member.belongsTo(Organization, {
   foreignKey: "organization_id",
-  otherKey: "project_id",
+  as: "organization"
+});
+
+// Relaciones One-to-Many entre User y Member
+User.hasMany(Member, {
+  foreignKey: "user_id",
+  as: "members"
+});
+
+Member.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user"
+});
+
+// Relaciones One-to-Many entre Organization y Project
+Organization.hasMany(Project, {
+  foreignKey: "organization_id",
   as: "projects"
 });
 
-Project.belongsToMany(Organization, {
-  through: "organization_projects",
-  foreignKey: "project_id",
-  otherKey: "organization_id",
-  as: "organizations"
-});
-
-// Relaciones One-to-Many entre Project y State
-Project.belongsTo(State, {
-  foreignKey: "state_id",
-  as: "state"
-});
-
-State.hasMany(Project, {
-  foreignKey: "state_id",
-  as: "projects"
-});
-
-// Relaciones One-to-Many entre Task y State
-Task.belongsTo(State, {
-  foreignKey: "state_id",
-  as: "state"
-});
-
-State.hasMany(Task, {
-  foreignKey: "state_id",
-  as: "tasks"
+Project.belongsTo(Organization, {
+  foreignKey: "organization_id",
+  as: "organization"
 });
 
 // Relaciones One-to-Many entre Project y Task
@@ -143,6 +153,28 @@ Project.hasMany(Task, {
 Task.belongsTo(Project, {
   foreignKey: "project_id",
   as: "project"
+});
+
+// Relaciones One-to-One entre Project y State
+Project.belongsTo(State, {
+  foreignKey: "state_id",
+  as: "state"
+});
+
+State.hasOne(Project, {
+  foreignKey: "state_id",
+  as: "project"
+});
+
+// Relaciones One-to-One entre Task y State
+Task.belongsTo(State, {
+  foreignKey: "state_id",
+  as: "state"
+});
+
+State.hasOne(Task, {
+  foreignKey: "state_id",
+  as: "task"
 });
 
 // Exportación de modelos

@@ -9,22 +9,6 @@ const Task = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    project_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references:{
-        model:"projects",
-        key:"id"
-      }
-    },
-    participant_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references:{
-        model:"participants",
-        key:"id"
-      }
-    },
     state_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -33,11 +17,11 @@ const Task = sequelize.define(
         key:"id"
       }
     },
-    assignment_id: {
+    project_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references:{
-        model:"assignments",
+        model:"projects",
         key:"id"
       }
     },

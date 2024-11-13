@@ -7,6 +7,14 @@ const Member = sequelize.define("member", {
     autoIncrement: true,
     primaryKey: true,
   },
+  organization_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "organizations",
+      key: "id",
+    },
+  },
   user_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
