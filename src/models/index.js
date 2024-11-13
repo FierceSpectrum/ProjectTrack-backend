@@ -67,20 +67,6 @@ Permission.belongsToMany(Role, {
   as: "roles"
 });
 
-User.belongsToMany(Organization, {
-  through: "user_organizations",
-  foreignKey: "user_id",
-  otherKey: "organization_id",
-  as: "organizations"
-});
-
-Organization.belongsToMany(User, {
-  through: "user_organizations",
-  foreignKey: "organization_id",
-  otherKey: "user_id",
-  as: "users"
-});
-
 // Relaciones Many-to-Many entre Task y Participant
 Task.belongsToMany(Participant, {
   through: "task_participants",
