@@ -7,14 +7,6 @@ const Project = sequelize.define("project", {
     autoIncrement: true,
     primaryKey: true,
   },
-  organization_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: "organizations",
-      key: "id",
-    },
-  },
   state_id: {
     type: DataTypes.INTEGER,
     allowNull: false,

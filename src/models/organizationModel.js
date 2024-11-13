@@ -7,14 +7,6 @@ const Organization = sequelize.define("organization", {
     autoIncrement: true,
     primaryKey: true,
   },
-  user_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: "users",
-      key: "id",
-    },
-  },
   name: {
     type: DataTypes.STRING(100),
     allowNull: false,

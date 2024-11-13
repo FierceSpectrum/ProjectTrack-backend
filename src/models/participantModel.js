@@ -23,10 +23,6 @@ const Participant = sequelize.define("participant", {
       key: "id",
     },
   },
-  assignments_id: {
-    type: DataTypes.ARRAY(DataTypes.INTEGER),
-    allowNull: false,
-  },
   state_participant: {
     type: DataTypes.STRING,
     allowNull: false,
